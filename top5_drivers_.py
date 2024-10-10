@@ -12,8 +12,9 @@ Original file is located at
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 from sklearn.decomposition import PCA
+from statsmodels.tsa.arima.model import ARIMA
+
 
 daily=pd.read_excel(r'/content/daily.xlsx')
 data_driver=pd.read_excel(r'/content/data_drivers_2008_full_cutcolumns.xlsx')
@@ -29,75 +30,26 @@ sp500['Date'] = pd.to_datetime(sp500['Date'], format='%Y%m%d')
 daily = daily.fillna(method='ffill')
 columns_to_drop = ['Unnamed: 0', 'Datetime', ]
 daily = daily.drop(columns=columns_to_drop)
-daily.head()
 
 daily.set_index('Date', inplace=True)
 data_driver.set_index('Date', inplace=True)
 sp500.set_index('Date', inplace=True)
 
-print(data_driver.shape)
-print(sp500.shape)
-
-import pandas as pd
-
-
 columns_with_negatives1 = data_driver.columns[data_driver.lt(0).any()]
 columns_with_negatives2 = sp500.columns[sp500.lt(0).any()]
-print(columns_with_negatives1)
-print(columns_with_negatives2)
-print(len(columns_with_negatives1))
-print(len(columns_with_negatives2))
-
 
 data_driver = data_driver.drop(columns=columns_with_negatives1)
 
 sp500 = sp500.drop(columns=columns_with_negatives2)
 
-print(data_driver.shape)
-print(sp500.shape)
-
 df = pd.merge(data_driver, sp500, on='Date')
 #df=df.tail(300)
-print(len(df))
 epsilon = 1e-8
 df = df.replace([np.inf, -np.inf], np.nan).fillna(method='ffill')
 df_after_2014 = df[df.index.year >= 2014]
-print(len(df_after_2014))
 df_after_2014=np.log(df_after_2014 ).diff().fillna(method='ffill')
 df_after_2014=df_after_2014.dropna()
 df_after_2014 = df_after_2014.drop(df_after_2014.index[-1])
-df_after_2014
-
-"""df = pd.merge(data_driver, sp500, on='Date')
-
-df=df.diff()
-df = df.fillna(method='bfill')
-df_after_2014 = df[df.index.year > 2014]
-df_after_2014"""
-
-import matplotlib.pyplot as plt
-
-plt.figure(figsize=(10, 6))
-
-df_after_2014.plot()
-
-plt.axhline(y=0.5, color='red', linestyle='--', label='Threshold Line')
-
-plt.xlabel('Date')
-plt.ylabel('Log Difference')
-plt.title('Stock Log Differences After 2014')
-
-plt.legend()
-
-plt.show()
-
-import matplotlib.pyplot as plt
-
-plt.figure(figsize=(10, 6))
-
-df_after_2014.plot()
-
-plt.axhline(y=0.3, color='red', linestyle='--', label='Threshold Line')
 
 crossing_legends = []
 for column in df_after_2014.columns:
@@ -106,20 +58,7 @@ for column in df_after_2014.columns:
         plt.scatter(crossing_points.index, crossing_points[column], marker='o', label=f'{column} Crossing')
         crossing_legends.append(f'{column} Crossing')
 
-plt.xlabel('Date')
-plt.ylabel('Log Difference')
-plt.title('Stock Log Differences After 2014')
-
-plt.legend(crossing_legends)
-
-plt.show()
-
 df=df_after_2014.copy()
-
-import pandas as pd
-from statsmodels.tsa.arima.model import ARIMA
-import numpy as np
-
 
 df1 = pd.DataFrame()
 for i in range(0,data_driver.shape[1]):
@@ -134,21 +73,7 @@ for i in range(0,data_driver.shape[1]):
     col_name = df.columns[i]
     df1[col_name] = causal_returns
 
-
-
-df1
-
-plt.plot(df1)
-
-
-
-import pandas as pd
-from statsmodels.tsa.arima.model import ARIMA
-import numpy as np
-
 df2 = pd.DataFrame()
-
-# Assuming df is your DataFrame
 num_columns = len(df.columns)
 
 for i in range(data_driver.shape[1], sp500.shape[1]+data_driver.shape[1]):
@@ -176,27 +101,8 @@ for i in range(data_driver.shape[1], sp500.shape[1]+data_driver.shape[1]):
     else:
         print(f"Index {i} is out of bounds for the DataFrame.")
 
-plt.plot(df2)
-
-"""# Iterate over the remaining columns in ce_df3
-df2=pd.DataFrame()
-for causal_col in range(127, df.shape[1]):
-    effect = df.iloc[:, causal_col]
-
-    order_ar22 = (2, 0, 2)
-    model_ar22 = ARIMA(effect, order=order_ar22)
-    results_ar22 = model_ar22.fit()
-    effect_returns = results_ar22.fittedvalues
-
-    # Append to df2 with a meaningful column name
-    col_name = f'Effect_Returns_{causal_col}'
-    df2[col_name] = effect_returns
-
-# Now, df1 and df2 contain the values of casual return ARMA and effect return, respectively, with meaningful column names"""
-
 df = pd.merge(df1, df2, on='Date')
 df = df.fillna(method='ffill')
-df
 
 ce_df3=df.copy()
 ce_df3=ce_df3.dropna()
