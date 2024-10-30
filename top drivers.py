@@ -8,18 +8,18 @@ Original file is located at
 """
 
 '''This is a sample code from our paper link https://www.aimspress.com/article/doi/10.3934/DSFE.2024018 '''
-
+# importing the nessessory library required 
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from statsmodels.tsa.arima.model import ARIMA
 
-
+# loading the data
 daily=pd.read_excel(r'/content/daily.xlsx')
 data_driver=pd.read_excel(r'/content/data_drivers_2008_full_cutcolumns.xlsx')
 sp500=pd.read_excel(r'/content/constituents_SPX_2008.xlsx')
-
+#preprocessing the data
 daily = daily.fillna(method='ffill')
 
 data_driver = data_driver.fillna(method='ffill')
@@ -30,22 +30,20 @@ sp500['Date'] = pd.to_datetime(sp500['Date'], format='%Y%m%d')
 daily = daily.fillna(method='ffill')
 columns_to_drop = ['Unnamed: 0', 'Datetime', ]
 daily = daily.drop(columns=columns_to_drop)
-
+# set the index 
 daily.set_index('Date', inplace=True)
 data_driver.set_index('Date', inplace=True)
 sp500.set_index('Date', inplace=True)
-
+# remove the columns which are negetive 
 columns_with_negatives1 = data_driver.columns[data_driver.lt(0).any()]
 columns_with_negatives2 = sp500.columns[sp500.lt(0).any()]
-
 data_driver = data_driver.drop(columns=columns_with_negatives1)
-
 sp500 = sp500.drop(columns=columns_with_negatives2)
-
 df = pd.merge(data_driver, sp500, on='Date')
-#df=df.tail(300)
+
 epsilon = 1e-8
 df = df.replace([np.inf, -np.inf], np.nan).fillna(method='ffill')
+#we work on the data after 2014 and onwards
 df_after_2014 = df[df.index.year >= 2014]
 df_after_2014=np.log(df_after_2014 ).diff().fillna(method='ffill')
 df_after_2014=df_after_2014.dropna()
@@ -57,7 +55,7 @@ for column in df_after_2014.columns:
     if not crossing_points.empty:
         plt.scatter(crossing_points.index, crossing_points[column], marker='o', label=f'{column} Crossing')
         crossing_legends.append(f'{column} Crossing')
-
+#renaming the dataframe for better understanding 
 df=df_after_2014.copy()
 
 df1 = pd.DataFrame()
@@ -106,7 +104,7 @@ df = df.fillna(method='ffill')
 
 ce_df3=df.copy()
 ce_df3=ce_df3.dropna()
-
+# using out desribed method , it is as mentioned in the paper 
 k = 200
 lag = 5
 interval = 100
@@ -114,6 +112,7 @@ Data_res_all_columns = pd.DataFrame()
 
 for f in range(data_driver.shape[1],  data_driver.shape[1]+sp500.shape[1]):
     Data_res_all_columns = pd.DataFrame()
+    # we use the inverval based indicator 
     for col_index in range(0, data_driver.shape[1]):
         Data_res = pd.DataFrame()
         for i in range(k, ce_df3.shape[0]):
@@ -173,7 +172,7 @@ for f in range(data_driver.shape[1],  data_driver.shape[1]+sp500.shape[1]):
 
     result_df = result_df.dropna(subset=['Value_1'])
 
-
+# final  resultant data frame is stored result_df
     result_df = result_df.set_index(top_rows.index)
 
 
