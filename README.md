@@ -3,6 +3,7 @@ This repository is based on the work of Alejandro Rodriguez and myself for the p
 link:https://www.aimspress.com/article/doi/10.3934/DSFE.2024018 
 
 
+
 # Abstract 
 This paper presents a method to identify causal interactions between two time series. The largest eigenvalue follows a Tracy-Widom distribution, derived from a Coulomb gas model. This defines causal interactions as the pushing and pulling of the gas, measurable by the variability of the largest eigenvalue's explanatory power. The hypothesis that this setup applies to time series interactions was validated, with causality inferred from time lags. The standard deviation of the largest eigenvalue's explanatory power in lagged correlation matrices indicated the probability of causal interaction between time series. Contrasting with traditional methods that rely on forecasting or window-based parametric controls, this approach offers a novel definition of causality based on dynamic monitoring of tail events. Experimental validation with controlled trials and historical data shows that this method outperforms Granger's causality test in detecting structural changes in time series. Applications to stock returns and financial market data show the indicator's predictive capabilities regarding average stock return and realized volatility. Further validation with brokerage data confirms its effectiveness in inferring causal relationships in liquidity flows, highlighting its potential for market and liquidity risk management.
 
@@ -21,7 +22,7 @@ Feel free to explore the repository to understand our methodologies and findings
 Attached to this repository is a folder called data that we have used in our paper. 
 We have worked on real-data as well as synthetic ARMA data to give the compartive results for when there is forced changes in arma on a particular date. 
 
-
-
+## Detailed Interview of Alejandro Rodriguez Dominguez with Peter cotton which provides indepth insight of the ideas is attached below.
+https://microprediction.medium.com/a-new-way-to-detect-causality-in-time-series-interview-with-alejandro-rodriguez-dominguez-9257e8783d7f
 
 # Citation: Alejandro Rodriguez Dominguez, Om Hari Yadav. A causal interactions indicator between two time series using extreme variations in the first eigenvalue of lagged correlation matrices[J]. Data Science in Finance and Economics, 2024, 4(3): 422-445. doi: 10.3934/DSFE.2024018
