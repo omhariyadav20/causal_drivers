@@ -12,13 +12,14 @@ Forced ARMA Models: We sometimes employ forced ARMA models ranging from (1,1,1) 
 Algorithmic Analysis: At other times, we directly apply algorithms to uncover relationships among different time series.
 
 Our key contributions include:
-Top Five Drivers for Each Relationship: We identify the top five factors driving each identified relationship.
-Analysis of Sudden ARMA Changes: We analyze a ±30-day window around forced ARMA model changes to examine how sudden shifts in the ARMA parameters are predicted by our model.
+Drivers for Each Relationship: We identify the top factors driving each identified relationship.
+Analysis of Sudden ARMA Changes: We analyze a ±30-day window around forced ARMA model changes to examine how sudden shifts in the ARMA parameters are predicted by our model by comparing it real data. 
 Published Code for Option Data: We have published our code for analyzing option data, formally demonstrating how options are affected by stock prices.
 Feel free to explore the repository to understand our methodologies and findings in greater detail. 
 
 # Data
-
+Attached to this repository is a folder called data that we have used in our paper. 
+We have worked on real-data as well as synthetic ARMA data to give the compartive results for when there is forced changes in arma on a particular date. 
 
 
 
